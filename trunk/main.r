@@ -1,5 +1,5 @@
 # Directories
-setwd("~/svn-working-copy");
+setwd("~/ic-alcparo");
 
 
 source("Scripts/config.r");
