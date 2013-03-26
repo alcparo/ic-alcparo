@@ -2,13 +2,13 @@
 setwd("~/ic-alcparo");
 
 
-source("Scripts/config.r");
-source("Scripts/classifiers.r");
-source("Scripts/baseline.r");
-source("Scripts/scores.r");
-source("Scripts/ensamble.r");
-source("Scripts/technique.r");
-source("Scripts/noise.r");
+#source("Scripts/config.r");
+#source("Scripts/classifiers.r");
+#source("Scripts/baseline.r");
+#source("Scripts/scores.r");
+#source("Scripts/ensamble.r");
+#source("Scripts/technique.r");
+#source("Scripts/noise.r");
 
 
 source("processing/multiclass.r");
