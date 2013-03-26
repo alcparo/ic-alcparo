@@ -29,7 +29,7 @@ MLP = make_Weka_classifier("weka/classifiers/functions/MultilayerPerceptron");
 NTB = make_Weka_filter("weka/filters/supervised/attribute/NominalToBinary");
 
 # Directories
-setwd("~/IC/");
+#setwd("~/IC/");
 
 # Files
 FILES = list.files("Datasets_processados/");

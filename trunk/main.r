@@ -14,7 +14,9 @@ setwd("~/ic-alcparo");
 source("processing/multiclass.r");
 source("config.r");
 
-
+increment = function(x){
+  eval.parent(substitute(x <- x + 1)); 
+}
 
 run = function(train, noise) {
 
