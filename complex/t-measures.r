@@ -9,9 +9,24 @@ t1 = function(data){
     #Calcular distancia maxima esferas
     #Verificar as distancias que sao != DBL_MAX
     
-    dt = dist(data[, -ncol(data)]);
+   # data=read.arff("/home/andrecatini/IC/Datasets_processados/AcuteInflammations.arff");
     class = data$Class;
-    dt = as.matrix(dt);
+    
+   # dt = dist(data[, -ncol(data)], method="euclidean");
+    #dt = as.matrix(dt);
+    
+    dataAux = data[,-ncol(data)];
+    dataTemp = matrix(nrow=nrow(dataAux), ncol=ncol(dataAux));
+    
+    for(i in 1:nrow(dataAux)){
+      for(j in 1:ncol(dataAux)){
+	dataTemp[i,j] = ((dataAux[i,j] - min(dataAux[,j]))/(max(dataAux[,j]) - min(dataAux[,j])));
+      }
+    }
+    
+    dt=dist(dataTemp);
+    dt=as.matrix(dt);
+    
     
     EPSILON_SPHERES = 0.55;
 	
@@ -24,13 +39,13 @@ t1 = function(data){
     overlappedExamples = FALSE;
     interClasses = c();
     aux = 1;
-	
+	print("Search the nearest neighbors for each example.");
 	for(i in 1 : nrow(dt)){
 		for(j in 1 : ncol(dt)) {
 			#if(dt[i,j] != 0){ #tirar essa verificacao -> para poder ocorrer overlap
 				if(class[i] != class[j]) { #TENHO QUE LIMITAR APENAS PARA OS EXEMPLOS INTER
-					interAux[j] = dt[i,j]; #eu quero o minimo disso
-					
+					interAux[aux] = dt[i,j]; #eu quero o minimo disso
+					increment(aux);
 				} 
 			#}
 		}
@@ -50,18 +65,19 @@ t1 = function(data){
 			#print(c(min(interAux, na.rm=TRUE), min(intraAux, na.rm=TRUE)));
 			
 		interAux = c();
+		aux = 1;
 
 	}
 	
 
     #// 4. Define the maximum separation permitted, epsilon.
     #epsilon = ( ComplexityMeasures::EPSILON_SPHERES * globalMinDist );
-    
+    print("Define the maximum separation permitted, epsilon.");
     epsilon = EPSILON_SPHERES*globalMinDist;
 
     #// 5. Search for the adherence subsets.
     #calculateAdherenceSubsets ( adherenceOrder, maxAdherenceOrder, distNeigh, overlappedExamples, epsilon );
-    
+    print("Search for the adherence subsets.");
     maxAdherenceOrder = 0;
     adherenceOrder = c();
     
@@ -69,7 +85,7 @@ t1 = function(data){
       if(overlappedExamples && (distNeigh[i] == 0)){
 	adherenceOrder[i] = 0;
       } else{
-	adherenceOrder[i] = (distNeigh[i] / epsilon) - 1;
+	adherenceOrder[i] = as.integer((distNeigh[i] / epsilon)) - 1;
       }
       
       if(adherenceOrder[i] > maxAdherenceOrder){
@@ -80,7 +96,7 @@ t1 = function(data){
 
     #// 6. Eliminate adherence subsets strictly included in another.
     #eliminateAdherenceSetsIncluded ( adherenceOrder, maxAdherenceOrder, epsilon );
-    
+    print("Eliminate adherence subsets strictly included in another.");
     maximum = maxAdherenceOrder;
     
     while(maximum >=  0){
@@ -105,7 +121,7 @@ t1 = function(data){
 	
 	nextMaximum = -1;
 	
-	for(i in 1:length(adherenceOrder)){
+	for(i in 1:length(adherenceOrder)){ #ver como otimizar isso (max ?)
 	    if(adherenceOrder[i] != -1 && (adherenceOrder[i] < maximum) && (adherenceOrder[i] > nextMaximum)){
 		nextMaximum = adherenceOrder[i];
 	    }
@@ -117,7 +133,7 @@ t1 = function(data){
 
     #// 7. Get statistics for the fraction of maximum covering spheres measure.
     #float* valuesReturn = getStatisticsFractMaxCoveringSpheres ( adherenceOrder, maxAdherenceOrder );
-    
+    print("Get statistics for the fraction of maximum covering spheres measure.");
     sum = sumsqr = numOrders = 0;
     stats = c();
     
@@ -138,6 +154,8 @@ t1 = function(data){
     
     
     print(stats);
+    
+    return(stats[1]/nrow(data));
 
 }
 
