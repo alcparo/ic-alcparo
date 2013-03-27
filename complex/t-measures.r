@@ -1,3 +1,11 @@
+tmeasures = function(data){
+
+    return(c(t1(data), t2(data)));
+
+}
+
+
+
 t1 = function(data){
 
    
