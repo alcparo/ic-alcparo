@@ -2,7 +2,7 @@
 
 
 mixture = function(train) {
-	print("mixture");
+	print("mixture"); #ONDE TEM DISTANCIA, DCOL Normaliza
 	dt = dist(train[,-ncol(train)]);
 
 	#dt = dist(data[, -ncol(data)]);
