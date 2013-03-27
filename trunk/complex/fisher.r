@@ -133,7 +133,7 @@ f2 = function(data) { #m-class
 }
 
 
-f3 = function(data) { #funciona pra 2-class. verificar as médias utilizadas pra m-class
+f3OLD = function(data) { #funciona pra 2-class. verificar as médias utilizadas pra m-class
 	
 	dataOriginal = data;
 	dataAux=data;
@@ -148,20 +148,25 @@ f3 = function(data) { #funciona pra 2-class. verificar as médias utilizadas pra
 
 	
 	while(attrRemain != 0 && exRemain != 0){
-
-		data = multiclass(data);
+     # print(c("attrRemain", attrRemain));
+     # print(c("exRemain", exRemain));
+      
+		data = multiclass2(data);
 
 		values=c();	
-		index1 = index2 = c();	
+		index1 = index2 = index=  c();	
+		attr=c();
 
 		for(j in 1 : length(data)) {
-		
+	
 			c1 = data[[j]][data[[j]]$Class == 1,];
 			c2 = data[[j]][data[[j]]$Class == 2,];
+			
+			#print(data[[j]]);
 
 			if(primeiraIteracao){
-				c1Original = c1;
-				c2Original = c2;
+				#c1Original = c1;
+				#c2Original = c2;
 
 				nrowC1 = nrowC1Aux[j] = nrow(c1);
 				nrowC2 = nrowC2Aux[j] = nrow(c2);
@@ -207,8 +212,10 @@ f3 = function(data) { #funciona pra 2-class. verificar as médias utilizadas pra
 			nomesc2 = rownames(c2[index1,]);
 			nomesc1 = rownames(c1[index2,]);
 
-			index = sort(as.integer(c(nomesc1, nomesc2)),method="quick");	
-
+			index = sort(as.integer(c(nomesc1, nomesc2)),method="quick");
+			#index = union(index, sort(as.integer(c(nomesc1, nomesc2)),method="quick"));	
+			
+			#print(index);
 		} 
 			if(primeiraIteracao){
 				#print(values);
@@ -240,5 +247,108 @@ f3 = function(data) { #funciona pra 2-class. verificar as médias utilizadas pra
 	}
 
 	return(c(F3, F4));
+}
+
+f3 = function(data) {
+	
+	mdata=multiclass2(data);
+	resultados = matrix(nrow=length(mdata), ncol=2);
+	for(j in 1:length(mdata)){
+	
+	  data=mdata[[j]];
+	  
+	  dataOriginal = data;
+	  indexTotal = c();
+	  attrTotal = c();
+	  
+	  F3 = F4 = 0;
+	
+	  primeiraIteracao = TRUE;
+	  attrRemain = ncol(data)-1;
+	  exRemain = nrow(data);
+	  #cumulDiscPower = rep(0, attrRemain);
+	  
+	  atributos = 1:attrRemain;
+
+	  while((attrRemain != 0) && (exRemain > 0)){
+		  index = attr = c();
+	  
+		  c1 = data[data$Class == 1,];
+		  c2 = data[data$Class == 2,];
+		  
+		  if(primeiraIteracao){
+		    nrowC1 = nrow(c1);
+		    nrowC2 = nrow(c2);
+		    
+		  }
+		  
+		  aux = c();
+		  
+		  for(i in 1:attrRemain){
+		    aux[i] = (sum(c2[,atributos[i]] < min(c1[,atributos[i]]) | c2[,atributos[i]] > max(c1[,atributos[i]])) + sum(c1[,atributos[i]] < min(c2[,atributos[i]]) | c1[,atributos[i]] > max(c2[,atributos[i]])))/(nrowC1+nrowC2);
+		    
+		  }
+		  
+		  value = max(aux);
+		  attrTemp = which(aux == max(aux));
+		  attr = atributos[max(attrTemp)];	
+		  
+		  
+		  cumulDiscPower = sum(c2[,attr] < min(c1[,attr]) | c2[,attr] > max(c1[,attr])) + sum(c1[,attr] < min(c2[,attr]) | c1[,attr] > max(c2[,attr]));
+				  
+		  indexC1 = (c1[,attr] < min(c2[,attr]) | c1[,attr] > max(c2[,attr]));
+		  indexC2 = (c2[,attr] < min(c1[,attr]) | c2[,attr] > max(c1[,attr]));
+		  
+		  nomesC1 = rownames(c1[indexC1,]);
+		  nomesC2 = rownames(c2[indexC2,]);	
+		  
+		  index = sort(as.integer(c(nomesC1, nomesC2)));
+		  
+		  indexTotal = union(indexTotal, index);
+		  
+		  indexTotal = sort(indexTotal);
+			  
+		  if(primeiraIteracao){
+		    F3 = value;
+		    F4 = value;
+		    
+		    primeiraIteracao = FALSE;
+		    
+		  } else{
+		    F4 = F4 + value;
+		  }
+		  
+		  if(cumulDiscPower==0)
+		      break;
+		  
+		  data = dataOriginal[-indexTotal, ];
+		  
+		  #aux1 = atributos[attrRemain];
+		  #atributos[attrRemain] = attr;
+		  #atributos[attr] = aux1;
+		  
+		  atributos = atributos[-max(attrTemp)];
+		  
+		  
+		  
+		  attrRemain = attrRemain - 1;
+		  
+		  #atributos[1:attrRemain] = sort(atributos[1:attrRemain]);
+		  #atributos[attrRemain:(ncol(dataOriginal)-1)] = sort(atributos[attrRemain:(ncol(dataOriginal)-1)]);
+		  
+		  exRemain = exRemain - length(index);
+		  #print(c("ex remain: ", exRemain));
+	  
+	  }
+	  
+	  print(c(F3,F4));
+	  
+	  resultados[j, 1] = F3;
+	  resultados[j, 2] = F4;
+	  
+	}
+	
+	return(c(mean(resultados[,1]), mean(resultados[,2])));
+	#return(c(F3, F4));
 }
 

@@ -3,28 +3,25 @@ t1 = function(data){
    
 
     #// 3. Search the nearest neighbors for each example.
-    #searchNearestNeighborsOfAnotherClass ( neigh, distNeigh, globalMinDist, overlappedExamples );
-    
-    #LEMBRETE: se a distancia for 0, overlap . overlappedExamples = TRUE;
-    #Calcular distancia maxima esferas
-    #Verificar as distancias que sao != DBL_MAX
-    
+   
    # data=read.arff("/home/andrecatini/IC/Datasets_processados/AcuteInflammations.arff");
     class = data$Class;
     
-   # dt = dist(data[, -ncol(data)], method="euclidean");
-    #dt = as.matrix(dt);
+      #Normalizacao
+   # dataAux = data[,-ncol(data)];
+    #dataTemp = matrix(nrow=nrow(dataAux), ncol=ncol(dataAux));
     
-    dataAux = data[,-ncol(data)];
-    dataTemp = matrix(nrow=nrow(dataAux), ncol=ncol(dataAux));
+    #for(i in 1:nrow(dataAux)){
+    #  for(j in 1:ncol(dataAux)){
+	#dataTemp[i,j] = ((dataAux[i,j] - min(dataAux[,j]))/(max(dataAux[,j]) - min(dataAux[,j])));
+    #  }
+    #}
+    for(i in 1:(ncol(data)-1)){
+	  data[,i] = scale(data[,i], center=min(data[,i]), scale = diff(range(data[,i])));
+	}
     
-    for(i in 1:nrow(dataAux)){
-      for(j in 1:ncol(dataAux)){
-	dataTemp[i,j] = ((dataAux[i,j] - min(dataAux[,j]))/(max(dataAux[,j]) - min(dataAux[,j])));
-      }
-    }
     
-    dt=dist(dataTemp);
+    dt=dist(data[,-ncol(data)]);
     dt=as.matrix(dt);
     
     
@@ -71,12 +68,12 @@ t1 = function(data){
 	
 
     #// 4. Define the maximum separation permitted, epsilon.
-    #epsilon = ( ComplexityMeasures::EPSILON_SPHERES * globalMinDist );
+   
     print("Define the maximum separation permitted, epsilon.");
     epsilon = EPSILON_SPHERES*globalMinDist;
 
     #// 5. Search for the adherence subsets.
-    #calculateAdherenceSubsets ( adherenceOrder, maxAdherenceOrder, distNeigh, overlappedExamples, epsilon );
+   
     print("Search for the adherence subsets.");
     maxAdherenceOrder = 0;
     adherenceOrder = c();
@@ -95,7 +92,7 @@ t1 = function(data){
     }
 
     #// 6. Eliminate adherence subsets strictly included in another.
-    #eliminateAdherenceSetsIncluded ( adherenceOrder, maxAdherenceOrder, epsilon );
+    
     print("Eliminate adherence subsets strictly included in another.");
     maximum = maxAdherenceOrder;
     
@@ -132,7 +129,7 @@ t1 = function(data){
     }
 
     #// 7. Get statistics for the fraction of maximum covering spheres measure.
-    #float* valuesReturn = getStatisticsFractMaxCoveringSpheres ( adherenceOrder, maxAdherenceOrder );
+    
     print("Get statistics for the fraction of maximum covering spheres measure.");
     sum = sumsqr = numOrders = 0;
     stats = c();
