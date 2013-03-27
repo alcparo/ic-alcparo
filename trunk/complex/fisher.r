@@ -257,6 +257,8 @@ f3 = function(data) {
 	
 	  data=mdata[[j]];
 	  
+	  print(data$Class);
+	  
 	  dataOriginal = data;
 	  indexTotal = c();
 	  attrTotal = c();
@@ -288,6 +290,8 @@ f3 = function(data) {
 		    aux[i] = (sum(c2[,atributos[i]] < min(c1[,atributos[i]]) | c2[,atributos[i]] > max(c1[,atributos[i]])) + sum(c1[,atributos[i]] < min(c2[,atributos[i]]) | c1[,atributos[i]] > max(c2[,atributos[i]])))/(nrowC1+nrowC2);
 		    
 		  }
+		  
+		  #print(c("discPower", aux));
 		  
 		  value = max(aux);
 		  attrTemp = which(aux == max(aux));
