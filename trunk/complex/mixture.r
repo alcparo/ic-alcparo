@@ -2,8 +2,7 @@
 
 
 mixture = function(train) {
-	print("mixture"); #ONDE TEM DISTANCIA, DCOL Normaliza
-	
+	print("mixture"); #ONDE TEM DISTANCIA, DCOL Normaliza	
 	
 	
 	for(i in 1:(ncol(train)-1)){ #Normalizacao
@@ -15,7 +14,7 @@ mixture = function(train) {
 	#dt = dist(data[, -ncol(data)]);
 	#class = data$Class;
 
-	value = c(n1(dt, train$Class), n2(dt, train$Class), n3(train, train$Class), n4());
+	value = c(n1(dt, train$Class), n2(dt, train$Class), n3(train, train$Class), n4(train));
 	return(value);
 }
 
@@ -34,7 +33,7 @@ n1 = function(dt, class) { #Se eu nao normalizo o dataset, o resultado muda / Di
 		}		
 	}
 	
-	print(c(aux, length(class)));
+	#print(c(aux, length(class)));
 	
 	return(aux/length(class));	
 
@@ -88,12 +87,12 @@ n3 = function(data, cl){
 	#cl = data$Class;
 
 	result = knn.cv(train, cl, k=1, use.all=F);
-	print(result);
-	print(cl);
+	#print(result);
+	#print(cl);
 	
 	error = as.numeric(result) - as.numeric(cl);
 	qnt = 0;
-	print(error);
+	#print(error);
 	for(i in 1:length(error)){
 	  if(error[i] != 0){
 	    increment(qnt);
@@ -110,10 +109,39 @@ n3 = function(data, cl){
 
 }
 
-n4 = function(){
+n4 = function(train){
   
-	#baseado no L3
-
-	return(-1);
+	#baseado no L3	
+	
+	numberOfClasses = length(levels(data$Class));
+	numberOfExamples = nrow(data);
+	numberOfAttributes = length(data) - 1;
+	
+	#dataAux = matrix(ncol = ncol(data), nrow = nrow(data));
+	dataAux = data;
+	
+	for(i in 1:numberOfExamples){
+	
+	repeat{
+		  ex1 = sample(rownames(data[data$Class == data[i,]$Class,]), size=1);
+		  ex2 = sample(rownames(data[data$Class == data[i,]$Class,]), size=1);
+		  
+		  if(ex1 != ex2){
+		    break;
+		    }
+		}
+	
+	  for(j in 1:numberOfAttributes){
+		rnd = runif(1);
+		dataAux[i, j] = data[ex1, j]*rnd + data[ex2, j]*(1-rnd);		
+	  
+	  }
+	  
+	  dataAux[i,]$Class = data[i,]$Class;
+	
+	}
+	
+	return(n3(dataAux, dataAux$Class));	
+	
 }
 

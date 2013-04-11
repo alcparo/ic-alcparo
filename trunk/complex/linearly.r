@@ -1,17 +1,19 @@
 # Linear Calc
 
 
-linearly = function(train) {
+linearly = function(data) {
 	print("linearly");
 	
-	model = SMO(Class~., train);
+	class = data$Class;
+	data$Class = as.numeric(data$Class);	
+	model = lm(Class~., data);
 
-	values = c(l1(model), l2(model), l3(model));
+	values = c(l1(data, model), l2(data, model), l3(data, model));
 	return(values);
 }
 
 
-l1 = function(model) { #DCol 
+l1 = function(data, model) { #DCol 
 
 	#aux = sum(model$residuals^2)/length(model$residuals);
 	#return(aux);
@@ -37,18 +39,64 @@ l1 = function(model) { #DCol
 
 	#val[j] = val[j]-16.161; 
 	#}
+	
+	aux = sum(abs(model$residuals))/nrow(data);
+	return(aux);
 
-	return(-1);
+	#return(-1);
 }
 
 
-l2 = function(model) {
+l2 = function(data, model) {
 
-	return(summary(model)$details[5]); #mean Absoluty Error
+	pred = round(predict(model, data[,-ncol(data)]));
+	acc = sum(diag(table(data$Class, pred)))/sum(table(data$Class, pred));
+	return(1-acc);
+
+	#return(summary(model)$details[5]); #mean Absoluty Error
 	
 }
 
-l3=function(model){
-	return(-1);
+l3=function(data, model){
+
+	
+
+	numberOfClasses = length(levels(data$Class));
+	numberOfExamples = nrow(data);
+	numberOfAttributes = length(data) - 1;
+	
+	#dataAux = matrix(ncol = ncol(data), nrow = nrow(data));
+	dataAux = data;
+	
+	for(i in 1:numberOfExamples){
+	
+	repeat{
+		  ex1 = sample(rownames(data[data$Class == data[i,]$Class,]), size=1);
+		  ex2 = sample(rownames(data[data$Class == data[i,]$Class,]), size=1);
+		  
+		  if(ex1 != ex2){
+		    break;
+		    }
+		}
+	
+	  for(j in 1:numberOfAttributes){
+		rnd = runif(1);
+		dataAux[i, j] = (data[ex1, j]*rnd) + (data[ex2, j]*(1-rnd));
+		
+	  
+	  }
+	  
+	  dataAux[i,]$Class = data[i,]$Class;
+	
+	}
+	
+	pred = round(predict(model, dataAux[,-ncol(dataAux)]));
+	acc = sum(diag(table(dataAux$Class, pred)))/sum(table(dataAux$Class, pred));
+	#print(c(acc, 1-acc));
+	
+	
+	return(acc);
+	
+	#return(-1);
 }
 
