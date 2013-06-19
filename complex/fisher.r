@@ -1,7 +1,7 @@
 # Fisher
 
 
-fisher = function(train) {
+fisher = function(train) { #F1 F2 F3 F4
 	print("fisher");
 
 	values = c(f1(train), f2(train), f3(train));
@@ -142,7 +142,7 @@ f3 = function(data) {
 	
 	  data=mdata[[j]];
 	  
-	  print(data$Class);
+	 # print(data$Class);
 	  
 	  dataOriginal = data;
 	  indexTotal = c();
@@ -230,7 +230,7 @@ f3 = function(data) {
 	  
 	  }
 	  
-	  print(c(F3,F4));
+	 # print(c(F3,F4));
 	  
 	  resultados[j, 1] = F3;
 	  resultados[j, 2] = F4;

@@ -17,10 +17,15 @@ library(RWeka);
 CLASS = list();
 
 # Rates
-RATES = seq(0.05, 0.40, 0.05);
+#RATES = seq(0.05, 0.40, 0.05);
+
+RATES = c(0.05, 0.1, 0.2, 0.4);
+
+#
+#RATES2 = rep(RATES, each=10);
 
 # Epochs
-EPOCHS = 30;
+EPOCHS = 10;
 
 # Classifiers
 MLP = make_Weka_classifier("weka/classifiers/functions/MultilayerPerceptron");

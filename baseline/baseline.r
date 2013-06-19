@@ -77,7 +77,7 @@ bs.methods = function(train, noise, func) {
 baseline = function(train, noise, alg=c("ednn", "renn", "aenn")) {
 
 	aux = mclapply(1:length(alg), function(x) {
-		bs.methods(train, noise, alg[x]);
+		bs.methods(train, noise, alg);
 	});
 	return(aux);
 }

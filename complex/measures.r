@@ -1,12 +1,14 @@
 # Complexity Metrics
-source("Scripts/complex/fisher.r");
-source("Scripts/complex/linearly.r");
-source("Scripts/complex/mixture.r");
+source("complex/fisher.r");
+source("complex/linearly.r");
+source("complex/mixture.r");
+source("complex/t-measures.r");
+
 
 
 complex = function(train) {
 	print("complex");
-	aux = c(fisher(train), linearly(train), mixture(train));
+	aux = c(fisher(train), linearly(train), mixture(train), tmeasures(train));
 	#aux = fisher(train);
 	#aux = linearly(train);
 	#aux = mixture(train);
