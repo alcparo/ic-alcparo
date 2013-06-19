@@ -1,40 +1,51 @@
-# Directories
-setwd("~/ic-alcparo");
 
+preprocessing = function(data) {
+		
+	nMeasures = 13;
+	nClassifiers = 4;	
+	k = 10; # K-fold cross validation	
+	
+	table = matrix(0, nrow=(EPOCHS*length(RATES)), ncol=(nMeasures+nClassifiers));
+	tableTmp = matrix(0, nrow=k, ncol=(nMeasures+nClassifiers));
+		
+	#colnames(table) = c("F1", "F2", "F3", "F4", "L1", "L2", "L3", "N1", "N2", "N3", "N4", "T1", "T2", "SVM", "kNN", "NaiveBayes", "randomForest");
+	listTmp = list();	
+	
+	for(i in 1 : length(RATES)) {
+		
+		tableRows=mclapply(1:EPOCHS, function(x){
+		
+			noise = index(RATES[i], nrow(data))
+			dataPolluted = pollution(data, noise);
+			
+			#GERAR INDICES e armazenar as classes que serão mudadas
+			dataKCV = kcv(data, k); #k fold cross validation
 
-#source("Scripts/config.r");
-#source("Scripts/classifiers.r");
-#source("Scripts/baseline.r");
-#source("Scripts/scores.r");
-#source("Scripts/ensamble.r");
-#source("Scripts/technique.r");
-#source("Scripts/noise.r");
-
-
-source("processing/multiclass.r");
-source("config.r");
-
-increment = function(x){
-  eval.parent(substitute(x <- x + 1)); 
+			for(l in 1:k) {
+			
+				dataKCVTrainTmp = dataKCV$train[[l]];
+				dataKCVTestTmp = dataKCV$test[[l]];
+				intersectionTmp = intersect(row.names(dataKCVTrainTmp), noise);
+				
+				for(m in 1:length(intersectionTmp)){ #Polui o conjunto de treinamento
+					dataKCVTrainTmp[which(row.names(dataKCVTrainTmp)==intersectionTmp[m]),]$Class = dataPolluted$Class[intersectionTmp[m]];
+				}
+					
+				complexMeasures = complex(dataKCVTrainTmp);
+				tableTmp[l,1:nMeasures] = complexMeasures;
+				tableTmp[l,(nMeasures+1):(nMeasures+nClassifiers)] = classifiers(dataKCVTrainTmp, dataKCVTestTmp); #train = dataKCV$train[[l]] ? Poluir test set ?
+			} #do.call e rbind 
+				
+			#table[(x + ((i-1)*EPOCHS)), ] = colMeans(tableTmp);
+			return (colMeans(tableTmp));		
+		});
+		
+		listTmp[[i]] = do.call(rbind, tableRows);
+	}
+	
+	table = do.call(rbind, listTmp);
+	colnames(table) = c("F1", "F2", "F3", "F4", "L1", "L2", "L3", "N1", "N2", "N3", "N4", "T1", "T2", "SVM", "kNN", "NaiveBayes", "randomForest");
+	
+	
+	return (table);
 }
-
-run = function(train, noise) {
-
-	aux = c(unlist(baseline(train, noise)), unlist(technique(train, noise)));
-	
-	#baseline: ednn", "renn", "aenn"
-	#technique: "cs", "mt"
-	#cada tecnica retorna dois valores, fazendo com que o aux fique com o dobro do tamanho, tendo assim componentes NA
-	
-	names(aux) = c("ednn", "renn", "aenn", "cs", "mt");
-	
-	print(aux); 
-	print(names(sort(aux, decreasing=TRUE)[1]));
-	
-	
-	return(sort(aux, decreasing=TRUE)[1]);	 #Retorna o nome da melhor tecnica de deteccao de ruido junto com a sua acuracia ?
-}
-
-
-#trocar lapply por mclapply em technique e baseline
-
