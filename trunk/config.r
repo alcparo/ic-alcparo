@@ -41,3 +41,4 @@ DBL_MIN = .Machine$double.xmin;
 source("processing/multiclass.r");
 source("config.r");
 source("complex/measures.r");
+source("others/increment.r");
