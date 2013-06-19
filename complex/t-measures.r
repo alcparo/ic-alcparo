@@ -44,7 +44,7 @@ t1 = function(data){
     overlappedExamples = FALSE;
     interClasses = c();
     aux = 1;
-	print("Search the nearest neighbors for each example.");
+	#print("Search the nearest neighbors for each example.");
 	for(i in 1 : nrow(dt)){
 		for(j in 1 : ncol(dt)) {
 			#if(dt[i,j] != 0){ #tirar essa verificacao -> para poder ocorrer overlap
@@ -77,12 +77,12 @@ t1 = function(data){
 
     #// 4. Define the maximum separation permitted, epsilon.
    
-    print("Define the maximum separation permitted, epsilon.");
+   # print("Define the maximum separation permitted, epsilon.");
     epsilon = EPSILON_SPHERES*globalMinDist;
 
     #// 5. Search for the adherence subsets.
    
-    print("Search for the adherence subsets.");
+  #  print("Search for the adherence subsets.");
     maxAdherenceOrder = 0;
     adherenceOrder = c();
     
@@ -101,7 +101,7 @@ t1 = function(data){
 
     #// 6. Eliminate adherence subsets strictly included in another.
     
-    print("Eliminate adherence subsets strictly included in another.");
+  #  print("Eliminate adherence subsets strictly included in another.");
     maximum = maxAdherenceOrder;
     
     while(maximum >=  0){
@@ -138,7 +138,7 @@ t1 = function(data){
 
     #// 7. Get statistics for the fraction of maximum covering spheres measure.
     
-    print("Get statistics for the fraction of maximum covering spheres measure.");
+   # print("Get statistics for the fraction of maximum covering spheres measure.");
     sum = sumsqr = numOrders = 0;
     stats = c();
     
@@ -158,7 +158,7 @@ t1 = function(data){
     stats[3] = sqrt( ( sumsqr - sum * sum / numOrders ) / ( numOrders - 1 ) );
     
     
-    print(stats);
+   # print(stats);
     
     return(stats[1]/nrow(data));
 
