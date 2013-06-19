@@ -1,4 +1,6 @@
 index = function(rate, num) {
+	
+	
 
 	value = trunc(rate*num);
 	noise = sample(num, value, replace=FALSE);
@@ -17,7 +19,7 @@ pollution = function(train, noise) {
 	return(train);
 }
 
-kcv = function(data, k=10) {
+kcv = function(data, k) {
 
 	tmp = fold = list();
 	class = levels(data$Class);
@@ -32,7 +34,7 @@ kcv = function(data, k=10) {
 			ssmp = c(ssmp, row.names(tmp[[j]][(((i-1)*(nrow(tmp[[j]])/k))+1):(i*(nrow(tmp[[j]])/k)),]));
 
 		fold$test[[i]] = data[sample(ssmp, length(ssmp)),];
-		fold$tran[[i]] = data[setdiff(row.names(data), ssmp),];
+		fold$train[[i]] = data[setdiff(row.names(data), ssmp),];
 	}
 
 	return(fold);
@@ -41,62 +43,100 @@ kcv = function(data, k=10) {
 preprocessing = function(data) {
 	
 	# construir uma tabela com 8*30 linhas e Y+1 colunas (atributos - numero de medidas de complexidade e classe) 
-	table = matrix(0, nrow=(8*30), ncol=11);
+	#table = matrix(0, nrow=(8*30), ncol=11);
 	
-	tecnicas=c();	
-
+	#tecnicas=c();	
+	
+	nMeasures = 13;
+	nClassifiers = 4;
+	
+	k = 10;
+	
+	
+	table = matrix(0, nrow=(EPOCHS*length(RATES)), ncol=(nMeasures+nClassifiers));
+	tableTmp = matrix(0, nrow=k, ncol=(nMeasures+nClassifiers));
+	
+	
+	colnames(table) = c("F1", "F2", "F3", "F4", "L1", "L2", "L3", "N1", "N2", "N3", "N4", "T1", "T2", "SVM", "kNN", "NaiveBayes", "randomForest");
+	listTmp = list();
+	
+	
 	for(i in 1 : length(RATES)) {
-
-		for(j in 1 : EPOCHS) {
-
-			noise = index(RATES[i], nrow(data));
-			aux = kcv(data); #k fold cross validation
-					
-			vet = matrix(0, nrow=10, ncol=10);
+		
+		tableRows=mclapply(1:EPOCHS, function(x){
+		
+			noise = index(RATES[i], nrow(data))
+			dataPolluted = pollution(data, noise);
 			
-			for(l in 1 : 10) {
+			#GERAR INDICES e armazenar as classes que serão mudadas
+			dataKCV = kcv(data, k); #k fold cross validation
 
-				tmp = aux$tran[[l]];
-
-				# aqui precisamos calcular as medidas de complexidade para o conjunto sem ruido	
-				#vet[i,1:5] = complexity(tmp);	
-				#vet[i,1:5] = measure(tmp);
-
-				measures_tmp = measure(tmp);
-				vet[i,1] = measures_tmp[[3]];
-				vet[i,2] = measures_tmp[[4]];
-				vet[i,3] = measures_tmp[[5]];
-				vet[i,4] = measures_tmp[[6]];
-				vet[i,5] = measures_tmp[[7]];
-
-				tmp = pollution(aux$tran[[l]], noise);
+			for(l in 1:k) {
+			
+				dataKCVTrainTmp = dataKCV$train[[l]];
+				dataKCVTestTmp = dataKCV$test[[l]];
+				intersectionTmp = intersect(row.names(dataKCVTrainTmp), noise);
 				
-				tecnicas[i] = run(tmp, noise);
+				for(m in 1:length(intersectionTmp)){ #Polui o conjunto de treinamento
+					dataKCVTrainTmp[which(row.names(dataKCVTrainTmp)==intersectionTmp[m]),]$Class = dataPolluted$Class[intersectionTmp[m]];
+				}
+					
+				complexMeasures = complex(dataKCVTrainTmp);
+				tableTmp[l,1:nMeasures] = complexMeasures;
+				tableTmp[l,(nMeasures+1):(nMeasures+nClassifiers)] = classifiers(dataKCVTrainTmp, dataKCVTestTmp); #train = dataKCV$train[[l]] ? Poluir test set ?
+			} #do.call e rbind 
 				
-				print(names(tecnicas[l]), tecnicas[i])
-				
-				# aqui precisamos calcular as medidas de complexidade para o conjunto com ruido
-				#vet[i,6:10] = complexity(tmp);	
-
-				#vet[i,6:10] = measure(tmp);	
-
-				measures_tmp = measure(tmp);
-				vet[i,6] = measures_tmp[[7]];
-				vet[i,7] = measures_tmp[[8]];
-				vet[i,8] = measures_tmp[[9]];
-				vet[i,9] = measures_tmp[[10]];
-
-				print(vet);		
-				
-			}
-
-			#Calcular media das colunas, exceto a ultima
-			#Ultima fazer por voto de maioria (moda)
-			#Jogar linha resultante na 
-		}
-
-		#table[((i-1)*EPOCHS)+j] = rowMeans(vet);
+			#table[(x + ((i-1)*EPOCHS)), ] = colMeans(tableTmp);
+			return (colMeans(tableTmp));		
+		});
+		
+		listTmp[[i]] = do.call(rbind, tableRows);
 	}
+	
+	table = do.call(rbind, listTmp);
+	colnames(table) = c("F1", "F2", "F3", "F4", "L1", "L2", "L3", "N1", "N2", "N3", "N4", "T1", "T2", "SVM", "kNN", "NaiveBayes", "randomForest");
+	
+	
+	return (table);
+}
+
+classifiers = function(train, test){
+	
+	aux = c(calcSVM(train, test), calcKNN(train,test), calcNB(train, test), calcRF(train,test));
+	
+	return (aux);
+	
+}
+
+calcSVM = function(train, test){
+	#print("svm");
+	model = svm(Class~., train, kernel="polynomial");
+	pred = predict(model, test[,-ncol(test)]);	
+	acc = sum(test$Class == pred) / nrow(test);
+	return(acc);
+}
+
+calcKNN = function(train, test){
+	#print("knn");
+	pred = knn(train[,-ncol(train)], test[,-ncol(test)], cl=train$Class);
+	acc = sum(test$Class == pred) / nrow(test);
+	return(acc);
+}
+
+calcNB = function(train, test){
+	#print("nb");
+	model = naiveBayes(Class~., train);
+	pred = predict(model, test[,-ncol(test)]);
+	acc = sum(test$Class == pred) / nrow(test);
+	return(acc);
+}
+
+calcRF = function(train, test){
+	#print("nb");
+	model = randomForest(Class~., train);
+	pred = predict(model, test[,-ncol(test)]);
+	acc = sum(test$Class == pred) / nrow(test);
+	return(acc);
 }
 
 

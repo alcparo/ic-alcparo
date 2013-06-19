@@ -11,6 +11,10 @@ source("Scripts/noise/noise.r");
 source("Scripts/complex/measures.r");
 
 
+source("technique/ensamble.r");
+source("technique/technique.r");
+source("baseline/baseline.r");
+
 run = function(train, noise) {
 	print("run");
 	aux = c(unlist(baseline(train, noise)), unlist(technique(train, noise)));
