@@ -17,12 +17,7 @@ library(RWeka);
 CLASS = list();
 
 # Rates
-#RATES = seq(0.05, 0.40, 0.05);
-
 RATES = c(0.05, 0.1, 0.2, 0.4);
-
-#
-#RATES2 = rep(RATES, each=10);
 
 # Epochs
 EPOCHS = 10;
@@ -34,14 +29,15 @@ MLP = make_Weka_classifier("weka/classifiers/functions/MultilayerPerceptron");
 NTB = make_Weka_filter("weka/filters/supervised/attribute/NominalToBinary");
 
 # Directories
-#setwd("~/IC/");
+setwd("~/ic-alcparo");
 
 # Files
-FILES = list.files("Datasets_processados/");
-
-
-##TESTE SVN
-
+FILES = list.files("/home/andrecatini/IC/Datasets_processados/");
 
 DBL_MAX = .Machine$double.xmax;
 DBL_MIN = .Machine$double.xmin;
+
+
+source("processing/multiclass.r");
+source("config.r");
+source("complex/measures.r");

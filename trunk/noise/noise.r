@@ -41,25 +41,16 @@ kcv = function(data, k) {
 }
 
 preprocessing = function(data) {
-	
-	# construir uma tabela com 8*30 linhas e Y+1 colunas (atributos - numero de medidas de complexidade e classe) 
-	#table = matrix(0, nrow=(8*30), ncol=11);
-	
-	#tecnicas=c();	
-	
+		
 	nMeasures = 13;
-	nClassifiers = 4;
-	
-	k = 10;
-	
+	nClassifiers = 4;	
+	k = 10; # K-fold cross validation	
 	
 	table = matrix(0, nrow=(EPOCHS*length(RATES)), ncol=(nMeasures+nClassifiers));
 	tableTmp = matrix(0, nrow=k, ncol=(nMeasures+nClassifiers));
-	
-	
-	colnames(table) = c("F1", "F2", "F3", "F4", "L1", "L2", "L3", "N1", "N2", "N3", "N4", "T1", "T2", "SVM", "kNN", "NaiveBayes", "randomForest");
-	listTmp = list();
-	
+		
+	#colnames(table) = c("F1", "F2", "F3", "F4", "L1", "L2", "L3", "N1", "N2", "N3", "N4", "T1", "T2", "SVM", "kNN", "NaiveBayes", "randomForest");
+	listTmp = list();	
 	
 	for(i in 1 : length(RATES)) {
 		
@@ -101,11 +92,8 @@ preprocessing = function(data) {
 }
 
 classifiers = function(train, test){
-	
-	aux = c(calcSVM(train, test), calcKNN(train,test), calcNB(train, test), calcRF(train,test));
-	
-	return (aux);
-	
+	aux = c(calcSVM(train, test), calcKNN(train,test), calcNB(train, test), calcRF(train,test));	
+	return (aux);	
 }
 
 calcSVM = function(train, test){
@@ -137,22 +125,5 @@ calcRF = function(train, test){
 	pred = predict(model, test[,-ncol(test)]);
 	acc = sum(test$Class == pred) / nrow(test);
 	return(acc);
-}
-
-
-main = function() {
-
-	# Database diretory
-	DIR = "Datasets_processados/";
-
-	# Files
-	FILES = list.files(DIR);
-
-
-	table = mclapply(1:length(FILES), function(x) {
-
-		data = read.arff(paste(DIR, FILES[x], sep=""));
-		return (preprocessing(data));
-	});
 }
 
