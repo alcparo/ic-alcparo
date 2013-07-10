@@ -41,5 +41,7 @@ DBL_MIN = .Machine$double.xmin;
 source("processing/multiclass.r");
 source("complex/measures.r");
 source("others/increment.r");
+source("others/kcv.r");
 source("classifiers/classifiers.r");
+source("noise/noise.r");
 source("main.r");
