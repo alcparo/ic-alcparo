@@ -4,6 +4,7 @@
 mixture = function(train) {
 	print("mixture"); #ONDE TEM DISTANCIA, DCOL Normaliza	
 	
+	train = train[, (colSums(abs(train[,-ncol(train)])) != 0)]; # Tira colunas com apenas 0s
 	
 	for(i in 1:(ncol(train)-1)){ #Normalizacao
 	  train[,i] = scale(train[,i], center=min(train[,i]), scale = diff(range(train[,i])));
@@ -86,6 +87,10 @@ n3 = function(data, cl){
 	#train = data;
 	#cl = data$Class;
 
+	#train = train[, (colSums(abs(train)) != 0)];
+	#teste[, (colSums(abs(teste[,-length(teste)])) != 0)]
+
+	
 	result = knn.cv(train, cl, k=1, use.all=F);
 	#print(result);
 	#print(cl);
