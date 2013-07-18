@@ -1,5 +1,5 @@
 tmeasures = function(data){
-
+	print("t-measures");
     return(c(t1(data), t2(data)));
 
 }

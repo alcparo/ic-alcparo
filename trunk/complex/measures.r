@@ -5,7 +5,7 @@ source("complex/mixture.r");
 source("complex/t-measures.r");
 
 complex = function(train) {
-	print("complex");
+	#print("complex");
 	aux = c(fisher(train), linearly(train), mixture(train), tmeasures(train));
 	#aux = fisher(train);
 	#aux = linearly(train);

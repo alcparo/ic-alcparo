@@ -124,6 +124,7 @@ f2 = function(data) { #m-class
 				}
 
 				F2 = F2 + abs(twoClassF2);
+				
 
 			}	
 		}	
@@ -135,13 +136,15 @@ f2 = function(data) { #m-class
 
 
 f3 = function(data) {
-	
+	print("f3");
 	mdata=multiclass2(data);
+
 	resultados = matrix(nrow=length(mdata), ncol=2);
+
 	for(j in 1:length(mdata)){
 	
 	  data=mdata[[j]];
-	  
+
 	 # print(data$Class);
 	  
 	  dataOriginal = data;
@@ -158,6 +161,7 @@ f3 = function(data) {
 	  atributos = 1:attrRemain;
 
 	  while((attrRemain != 0) && (exRemain > 0)){
+	
 		  index = attr = c();
 	  
 		  c1 = data[data$Class == 1,];
