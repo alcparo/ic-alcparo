@@ -32,16 +32,18 @@ NTB = make_Weka_filter("weka/filters/supervised/attribute/NominalToBinary");
 setwd("~/ic-alcparo");
 
 # Files
-FILES = list.files("/home/andrecatini/IC/Datasets_processados/");
+FILES.NAMES = list.files("/home/andrecatini/Dropbox/LINUX/Datasets_processados/");
+FILES = paste("/home/andrecatini/Dropbox/LINUX/Datasets_processados/", FILES.NAMES, sep="");
+
 
 DBL_MAX = .Machine$double.xmax;
 DBL_MIN = .Machine$double.xmin;
 
 
-source("processing/multiclass.r");
-source("complex/measures.r");
+#source("processing/multiclass.r");
+#source("complex/measures.r");
 source("others/increment.r");
 source("others/kcv.r");
 source("classifiers/classifiers.r");
 source("noise/noise.r");
-source("main.r");
+source("measures.r");

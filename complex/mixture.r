@@ -21,19 +21,25 @@ mixture = function(train) {
 
 
 n1 = function(dt, class) { #Se eu nao normalizo o dataset, o resultado muda / Diferenças resultantes da implementacao da MST
+	#cat("n1\n");
 	tree = mst(dt);
 	aux=0;
 
-	for(i in 1 : nrow(tree)){
-		for(j in i : ncol(tree)){
-			if(tree[i,j] != 0 & (class[i] != class[j])){
-				
-					aux = aux + 1;			
-		
-			}
-		}		
-	}
+# 	for(i in 1 : nrow(tree)){
+# 		for(j in i : ncol(tree)){
+# 			if(tree[i,j] != 0 & (class[i] != class[j])){
+# 				
+# 					aux = aux + 1;			
+# 		
+# 			}
+# 		}		
+# 	}
 	
+	index = which(tree!=0, arr.ind=T);
+	
+	aux = sum(class[index[,1]] != class[index[,2]]) / 2;
+	
+
 	#print(c(aux, length(class)));
 	
 	return(aux/length(class));	
@@ -42,13 +48,17 @@ n1 = function(dt, class) { #Se eu nao normalizo o dataset, o resultado muda / Di
 
 
 n2 = function(dt, class) {
-
+#cat("n2\n");
 	#dt = dist(data[, -ncol(data)]);
 	#class = data$Class;
 	dt = as.matrix(dt);
 	
 	interAux = intraAux = c();
 	inter = intra = 0;
+	
+# 	index = which(dt!=0, arr.ind=T);	
+# 	i = index[,1]; j = index[,2];
+# 	indexLength = length(i);
 	
 	for(i in 1 : nrow(dt)){
 		for(j in 1 : ncol(dt)) {
@@ -71,7 +81,7 @@ n2 = function(dt, class) {
 		interAux = intraAux = c();
 
 	}
-
+	      
 	#return(c(mean(intra), mean(inter)));
 	
 	#print(c(intra,inter));
@@ -82,7 +92,7 @@ n2 = function(dt, class) {
 
 
 n3 = function(data, cl){
-
+#cat("n3\n");
 	train = data[,-ncol(data)];
 	#train = data;
 	#cl = data$Class;
@@ -114,8 +124,8 @@ n3 = function(data, cl){
 
 }
 
-n4 = function(train){
-  
+n4 = function(data){
+  #cat("n4\n");
 	#baseado no L3	
 	
 	numberOfClasses = length(levels(data$Class));
