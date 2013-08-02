@@ -3,16 +3,6 @@
 # Ho and Basu (2002), Ho et al. (2006) and (Orriols-Puig et al., 2010)
 # A set of measures designed to characterize the apparent complexity of data sets
 
-# Directory
-DIR = ("/home/andrecatini/");
-
-
-# Complexity metrics
-METRICS = c("F1", "F1v", "F2", "F3", "F4", "L1", "L2", "L3", "N1", "N2", "N3", "N4", "T1", "T2");
-
-# Re-implementation of three meansure metrics
-REPLACE = c("F1v", "L1", "L2", "L3");
-
 measures = function(data) {
 
 	name = paste(".", paste(sample(letters, 50, replace=TRUE), collapse=""), sep="");
