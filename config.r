@@ -22,6 +22,20 @@ RATES = c(0.05, 0.1, 0.2, 0.4);
 # Epochs
 EPOCHS = 10;
 
+# Directory
+DIR = ("/home/andrecatini/");
+
+
+# Complexity metrics
+METRICS = c("F1", "F1v", "F2", "F3", "F4", "L1", "L2", "L3", "N1", "N2", "N3", "N4", "T1", "T2");
+
+# Re-implementation of three meansure metrics
+REPLACE = c("F1v", "L1", "L2", "L3");
+
+CLASSIFIERS = c("SVM", "kNN", "NaiveBayes", "randomForest");
+
+COLNAMES = c(METRICS, CLASSIFIERS);
+
 # Classifiers
 MLP = make_Weka_classifier("weka/classifiers/functions/MultilayerPerceptron");
 
@@ -29,7 +43,7 @@ MLP = make_Weka_classifier("weka/classifiers/functions/MultilayerPerceptron");
 NTB = make_Weka_filter("weka/filters/supervised/attribute/NominalToBinary");
 
 # Directories
-setwd("~/ic-alcparo");
+#setwd("/home/andrecatini/ic-alcparo/");
 
 # Files
 FILES.NAMES = list.files("/home/andrecatini/Dropbox/LINUX/Datasets_processados/");
@@ -39,6 +53,7 @@ FILES = paste("/home/andrecatini/Dropbox/LINUX/Datasets_processados/", FILES.NAM
 DBL_MAX = .Machine$double.xmax;
 DBL_MIN = .Machine$double.xmin;
 
+setwd("/home/andrecatini/ic-alcparo/");
 
 #source("processing/multiclass.r");
 #source("complex/measures.r");
@@ -47,3 +62,8 @@ source("others/kcv.r");
 source("classifiers/classifiers.r");
 source("noise/noise.r");
 source("measures.r");
+source("metabase.r");
+source("regressors/regressors.r");
+
+#METABASE.FILES.NAMES = list.files("/home/andrecatini/metabases/");
+#METABASE.FILES = paste("/home/andrecatini/metabases/", METABASE.FILES.NAMES, sep="");

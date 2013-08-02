@@ -7,7 +7,7 @@ index = function(rate, num) {
 }
 
 pollution = function(train, noise) {	
-
+	
 	tmp = intersect(row.names(train), noise);
 	
 	for(i in 1:length(tmp)){		

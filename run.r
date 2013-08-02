@@ -1,23 +1,6 @@
-# Directories
-setwd("~/IC/");
+setwd("/home/andrecatini/ic-alcparo/");
+source("config.r");
 
-source("Scripts/config.r");
-source("Scripts/classifiers/classifiers.r");
-source("Scripts/baseline/baseline.r");
-source("Scripts/fscore/fscore.r");
-source("Scripts/technique/ensamble.r");
-source("Scripts/technique/technique.r");
-source("Scripts/noise/noise.r");
-source("Scripts/complex/measures.r");
-
-
-source("technique/ensamble.r");
-source("technique/technique.r");
-source("baseline/baseline.r");
-
-run = function(train, noise) {
-	print("run");
-	aux = c(unlist(baseline(train, noise)), unlist(technique(train, noise)));
-	names(aux) = c("ednn", "renn", "aenn", "cs", "mt");
-	return(sort(aux, decreasing=TRUE)[1]);	
-}
+#audiology.arff removido. Poucos exemplos
+#abalone.arff deu erro.
+#flags.arff : erro no randomForest
