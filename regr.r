@@ -1,6 +1,5 @@
-FILES.METABASES = paste("/home/andrecatini/metabases/", list.files("/home/andrecatini/metabases/"), sep="");
-
-EXAMPLES = 5; #2 ou mais
+#FILES.METABASES = paste("/home/andrecatini/metabases/", list.files("/home/andrecatini/metabases/"), sep="");
+#EXAMPLES = 5; #2 ou mais
 
 list.metabases = list();
 for(i in 1:length(FILES.METABASES)){

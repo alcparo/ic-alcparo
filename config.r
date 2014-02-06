@@ -25,38 +25,40 @@ EPOCHS = 10;
 # Directory
 DIR = ("/home/andrecatini/");
 
-
 # Complexity metrics
 METRICS = c("F1", "F1v", "F2", "F3", "F4", "L1", "L2", "L3", "N1", "N2", "N3", "N4", "T1", "T2");
 
 # Re-implementation of three meansure metrics
 REPLACE = c("F1v", "L1", "L2", "L3");
 
+# Classifiers names
 CLASSIFIERS = c("SVM", "kNN", "NaiveBayes", "randomForest");
 
 COLNAMES = c(METRICS, CLASSIFIERS);
 
-# Classifiers
+# Weka Classifiers
 MLP = make_Weka_classifier("weka/classifiers/functions/MultilayerPerceptron");
 
-# Nominal to binary
+# Weka Nominal to binary
 NTB = make_Weka_filter("weka/filters/supervised/attribute/NominalToBinary");
 
-# Directories
-#setwd("/home/andrecatini/ic-alcparo/");
+Directories
+setwd("/home/andrecatini/ic-alcparo/");
 
 # Files
 FILES.NAMES = list.files("/home/andrecatini/Dropbox/LINUX/Datasets_processados/");
 FILES = paste("/home/andrecatini/Dropbox/LINUX/Datasets_processados/", FILES.NAMES, sep="");
 
-
 DBL_MAX = .Machine$double.xmax;
 DBL_MIN = .Machine$double.xmin;
 
-setwd("/home/andrecatini/ic-alcparo/");
+# Metabases file names
+FILES.METABASES = paste("/home/andrecatini/metabases/", list.files("/home/andrecatini/metabases/"), sep="");
 
-#source("processing/multiclass.r");
-#source("complex/measures.r");
+# Number of regressors iterations
+EXAMPLES = 5; #2 ou mais
+
+source("others/multiclass.r");
 source("others/increment.r");
 source("others/kcv.r");
 source("classifiers/classifiers.r");
