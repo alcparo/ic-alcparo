@@ -45,10 +45,8 @@ tratamento <- function(){
 	#DIR = "Datasets_ARFF/";
 
 	# Files
-	#files.arff = list.files(DIR);
-
-	files.arff <- c("breast-w.arff", "colic.ORIG.arff", "hepatitis.arff", "hypothyroid.arff", "lymph.arff", "Zoo.arff", "Abalone.arff", "AcuteInflammations.arff", "Arrhythmia.arff", "audiology.arff", "australian_svm.arff", "autos.arff", "balance-scale.arff", "BloodTransfusionServiceCenter.arff", "breast-cancer.arff", "BreastCancerWisconsin(Diagnostic).arff", "BreastCancerWisconsin(Original).arff", "BreastCancerWisconsin(Prognostic).arff", "BreastTissue.arff", "car.arff", "Cardiotocography.arff", "Chess.arff", "cmc.arff", "CongressionalVotingRecords.arff", "ConnectionistBench(Sonar,Minesvs.Rocks).arff", "ConnectionistBench(VowelRecognition-DeterdingData).arff", "ContraceptiveMethodChoice.arff", "credit-a.arff", "credit-g.arff", "CylinderBands.arff", "Dermatology.arff", "diabetes.arff", "ecoli.arff", "Flags.arff", "glass.arff", "GlassIdentification.arff", "Haberman'sSurvival.arff", "Hayes-Roth.arff", "heart-c.arff", "heart.arff", "Hill-Valley.arff", "HorseColic.arff", "ImageSegmentation.arff", "iris.arff", "kr-vs-kp.arff", "LibrasMovement.arff", "MammographicMass.arff", "mushroom.arff", "Musk(Version1).arff",  "OpticalRecognitionofHandwrittenDigits.arff", "OzoneLevelDetection.arff", "PageBlocksClassification.arff", "Parkinsons.arff", "PimaIndiansDiabetes.arff", "PittsburghBridges.arff", "SECOM.arff", "segment.arff",  "sonar.arff", "soybean.arff", "Spambase.arff", "SPECTFHeart.arff", "splice.arff", "Statlog(GermanCreditData).arff",  "Statlog(LandsatSatellite).arff", "tae.arff", "TeachingAssistantEvaluation.arff", "Tic-Tac-ToeEndgame.arff", "vehicle.arff", "VertebralColumn.arff", "vote.arff", "vowel.arff", "Wall-FollowingRobotNavigationData.arff", "waveform-5000.arff", "WaveformDatabaseGenerator(Version1).arff", "WaveformDatabaseGenerator(Version2).arff", "Wine.arff", "WineQuality.arff", "Yeast.arff")	
-		
+	files.arff = list.files(DIR);
+	
 	files.length <- length(files.arff)
 	
 	controle <- 1
