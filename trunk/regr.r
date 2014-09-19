@@ -1,16 +1,13 @@
-#FILES.METABASES = paste("/home/andrecatini/metabases/", list.files("/home/andrecatini/metabases/"), sep="");
-#EXAMPLES = 5; #2 ou mais
-
 list.metabases = list();
 for(i in 1:length(FILES.METABASES)){
 	list.metabases[[i]] = read.table(FILES.METABASES[i]);
 }
 
-table.metabases = do.call(rbind, list.metabases);
+table.metabases = do.call(rbind, list.metabases); # Cria a metabase com os meta atributos de todos os datasets
 
 table.metabases = normalize(table.metabases);
 
-row.names(table.metabases) = 1:2640;
+row.names(table.metabases) = 1:2640; ### 2640 entradas da metabase (40 * 66)
 
 results.svm = list();
 results.rf = list();
@@ -18,7 +15,7 @@ results.default = list();
 
 for(k in 1:EXAMPLES){
 
-	index = sample(c(1:66), 66, replace=F);
+	index = sample(c(1:66), 66, replace=F); 
 	index = index*40-39;
 
 	index.train = c();
@@ -48,7 +45,7 @@ aux.default = data.frame(do.call(rbind, results.default));
 #aux.default = data.frame(aux.default);
 
 
-results.final = lapply(CLASSIFIERS, function(x){
+results.final = lapply(CLASSIFIERS, function(x){ # Resultado dos meta-regressores 
 
 	aux = matrix(nrow = EXAMPLES+2, ncol=3, dimnames=list(c(seq(1, EXAMPLES, 1), "mean", "sd"), c("rg.SVM", "rg.RF", "default")));
 	aux[1:EXAMPLES, "rg.SVM"] = aux.svm[, x];

@@ -7,7 +7,7 @@
 # Packages
 require(e1071);
 require(kknn);
-require(multicore);
+#require(multicore);
 require(randomForest);
 require(rpart);
 
@@ -17,12 +17,12 @@ REGRESSORS = c(paste("rg.", c("mlp", "dwnn", "rf", "rpart", "svm"), sep=""), "de
 
 # dataset folder
 #DATABASE = "/home/lpfgarcia/Desktop/kdd/meta/database/";
-DATABASE = "/home/andrecatini/metabases/";
+DATABASE = "/home/alcparo/metabases/";
 
 
 # Directory
 #DIR = "/home/lpfgarcia/Desktop/kdd/meta/";
-DIR = "/home/andrecatini/";
+DIR = "/home/alcparo/";
 
 # Epochs to run
 EPOCHS = 10;
@@ -47,8 +47,8 @@ TECHS = c("SVM", "kNN", "NaiveBayes", "randomForest");
 COLNAMES = c(METRICS, TECHS);
 
 
-source("/home/andrecatini/ic-alcparo/regressors/read.r");
-source("/home/andrecatini/ic-alcparo/regressors/regressors.r");
-source("/home/andrecatini/ic-alcparo/regressors/root.r");
-source("/home/andrecatini/ic-alcparo/regressors/threshold.r");
-source("/home/andrecatini/ic-alcparo/regressors/validation.r");
+source("/home/alcparo/ic-alcparo/regressors/read.r");
+source("/home/alcparo/ic-alcparo/regressors/regressors.r");
+source("/home/alcparo/ic-alcparo/regressors/root.r");
+source("/home/alcparo/ic-alcparo/regressors/threshold.r");
+source("/home/alcparo/ic-alcparo/regressors/validation.r");

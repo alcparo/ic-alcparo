@@ -1,4 +1,6 @@
-metabase = function(data) {
+#Cria uma metabase dado um dataset "data"
+
+metabase = function(data) { 
 	
 	nMeasures = 14;
 	nClassifiers = 4;	
@@ -16,7 +18,7 @@ metabase = function(data) {
 			cat(c("RATE: ", RATES[i],"\tEPOCHS: ", x, "\n"));
 			
 			noise = index(RATES[i], nrow(data))
-			dataPolluted = pollution(data, noise);
+			dataPolluted = pollution(data, noise); #Poluí o dataset
 			
 			#GERAR INDICES e armazenar as classes que serão mudadas
 			dataKCV = kcv(data, k); #k fold cross validation
@@ -32,7 +34,7 @@ metabase = function(data) {
 				}
 					
 				#complexMeasures = complex(dataKCVTrainTmp);
-				complexMeasures = measures(dataKCVTrainTmp);
+				complexMeasures = measures(dataKCVTrainTmp); #Calcula as medidas de complexidade
 				tableTmp[l,1:nMeasures] = unlist(complexMeasures);
 				tableTmp[l,(nMeasures+1):(nMeasures+nClassifiers)] = classifiers(dataKCVTrainTmp, dataKCVTestTmp); #train = dataKCV$train[[l]] ? Poluir test set ?
 				
@@ -58,5 +60,3 @@ metabase = function(data) {
 	
 	return (table);
 }
-
-#Mensagem de erro: stop("mensagem")
