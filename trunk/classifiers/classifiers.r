@@ -5,7 +5,7 @@ classifiers = function(train, test){
 
 calcSVM = function(train, test){
 	#print("svm");
-	model = svm(Class~., train, kernel="polynomial");
+	model = svm(Class~., train, kernel="polynomial", scale=FALSE); # Deixar ou tirar scale?
 	pred = predict(model, test[,-ncol(test)]);	
 	acc = sum(test$Class == pred) / nrow(test);
 	return(acc);

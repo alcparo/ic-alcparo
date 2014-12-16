@@ -4,7 +4,7 @@
 NTB = make_Weka_filter("weka/filters/supervised/attribute/NominalToBinary");
 
 binarize = function(data) {
- 	temp = NTB(Class ~ ., data, control="N=FALSE, A=TRUE");
+ 	temp = NTB(Class~., data, control=Weka_control(N=FALSE, A=TRUE));
 	return(temp);
 }
 
@@ -39,10 +39,10 @@ processing = function(data, name) {
 
 tratamento <- function(){
 
-	setwd("~/Documentos/IC/Datasets_ARFF")
+	setwd("/home/alcparo/Datasets_ARFF/")
 
 	# Database diretory
-	#DIR = "Datasets_ARFF/";
+	DIR = "/home/alcparo/Datasets_ARFF/";
 
 	# Files
 	files.arff = list.files(DIR);
@@ -97,7 +97,7 @@ tratamento <- function(){
 		#name <- strsplit(files.arff[controle], ".arff")[[1]]	
 		#processing(base, name)
 		
-		write.arff(base, paste(c("./tratados_new/", files.arff[controle]), collapse=""))
+		write.arff(base, paste(c("/home/alcparo/Datasets_Processados_NEW/", files.arff[controle]), collapse=""))
 		
 		print("OK!")
 		

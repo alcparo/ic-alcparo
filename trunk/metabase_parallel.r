@@ -1,7 +1,11 @@
 #Cria uma metabase dado um dataset "data"
 
+library(doMC)
+library(foreach)
+registerDoMC()
+
 metabase = function(data) { 
-	set.seed(1);
+	
 	nMeasures = 14;
 	nClassifiers = 4;	
 	k = 10; # K-fold cross validation	
@@ -14,12 +18,14 @@ metabase = function(data) {
 	
 	for(i in 1 : length(RATES)) {
 		#print(c("RATE: ", RATES[i]));
-		
+		noiseParallel = list();
+		for(n in 1:EPOCHS) noiseParallel[[n]] = index(RATES[i], nrow(data)); 
 
-		tableRows=lapply(1:EPOCHS, function(x){
+		#tableRows=lapply(1:EPOCHS, function(x){
+		tableRows=foreach(x=1:EPOCHS) %dopar% {
 			cat(c("RATE: ", RATES[i],"\tEPOCHS: ", x, "\n"));
 			
-			noise = index(RATES[i], nrow(data))
+			noise = noiseParallel[[x]];
 			dataPolluted = pollution(data, noise); #Poluí o dataset
 			
 			#GERAR INDICES e armazenar as classes que serão mudadas
@@ -54,7 +60,7 @@ metabase = function(data) {
 				
 			
 			return (colMeans(tableTmp));		
-		});
+		}
 		#print("TERMINOU");
 		listTmp[[i]] = do.call(rbind, tableRows);
 	}

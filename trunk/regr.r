@@ -59,3 +59,40 @@ results.final = lapply(CLASSIFIERS, function(x){ # Resultado dos meta-regressore
 
 names(results.final) = CLASSIFIERS;
 
+require(ggplot2);
+require(reshape2);
+
+colnames(results.final$SVM) = c("SVM", "RF", "Default");
+box.svm=results.final$SVM[1:5,];
+box.svm.melt=melt(box.svm)
+colnames(box.svm.melt) = c("", "Regressores", "MSE");
+p = ggplot(data.frame(box.svm.melt), aes(Regressores, MSE))
+p+geom_boxplot() + stat_summary(fun.y=mean, geom="point", shape=5, size=3) + ggtitle("SVM")
+
+colnames(results.final$randomForest) = c("SVM", "RF", "Default");
+box.rf=results.final$randomForest[1:5,];
+box.rf.melt=melt(box.rf)
+colnames(box.rf.melt) = c("", "Regressores", "MSE");
+p = ggplot(data.frame(box.rf.melt), aes(Regressores, MSE))
+p+geom_boxplot() + stat_summary(fun.y=mean, geom="point", shape=5, size=3) + ggtitle("RF")
+
+colnames(results.final$kNN) = c("SVM", "RF", "Default");
+box.knn=results.final$kNN[1:5,];
+box.knn.melt=melt(box.knn)
+colnames(box.knn.melt) = c("", "Regressores", "MSE");
+p = ggplot(data.frame(box.knn.melt), aes(Regressores, MSE))
+p+geom_boxplot() + stat_summary(fun.y=mean, geom="point", shape=5, size=3) + ggtitle("kNN")
+
+colnames(results.final$NaiveBayes) = c("SVM", "RF", "Default");
+box.naive=results.final$NaiveBayes[1:5,];
+box.naive.melt=melt(box.naive)
+colnames(box.naive.melt) = c("", "Regressores", "MSE");
+p = ggplot(data.frame(box.naive.melt), aes(Regressores, MSE))
+p+geom_boxplot() + stat_summary(fun.y=mean, geom="point", shape=5, size=3) + ggtitle("Naive Bayes")
+
+
+boxplot(box.svm[,1], box.svm[,2], box.svm[,3], box.rf[,1], box.rf[,2], box.rf[,3], box.knn[,1], box.knn[,2], box.knn[,3], box.naive[,1], box.naive[,2], box.naive[,3])
+
+group = [1,1,1,2,2,2,3,3,3,4,4,4]
+
+
