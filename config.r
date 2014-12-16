@@ -14,6 +14,7 @@ library(class);
 library(randomForest);
 library(rpart); 
 library(RWeka);
+library(modeest);
 
 # List of functions
 CLASS = list();
@@ -30,7 +31,7 @@ DIR = (path.expand("~/"));
 # Complexity metrics
 METRICS = c("F1", "F1v", "F2", "F3", "F4", "L1", "L2", "L3", "N1", "N2", "N3", "N4", "T1", "T2");
 
-# Re-implementation of three meansure metrics
+# Re-implementation of four measure metrics
 REPLACE = c("F1v", "L1", "L2", "L3");
 
 # Classifiers names
@@ -50,16 +51,23 @@ setwd(path.expand("~/ic-alcparo/"));
 # Files
 #FILES.NAMES = list.files(path.expand("~/Datasets_processados/"));
 FILES.NAMES = as.matrix(read.table("files.bases.ok.names.txt"))[,1];
-FILES = paste(path.expand("~/Datasets_processados/"), FILES.NAMES, sep="");
+FILES = paste(path.expand("~/Datasets_Processados_NEW/"), FILES.NAMES, sep="");
 
 DBL_MAX = .Machine$double.xmax;
 DBL_MIN = .Machine$double.xmin;
 
 # Metabases file names
+#FILES.METABASES.NAMES = list.files(path.expand("~/metabases_NEW"));
+#FILES.METABASES = paste(path.expand("~/metabases_NEW/"), list.files(path.expand("~/metabases_NEW/")), sep="");
+
+FILES.METABASES.NAMES = list.files(path.expand("~/metabases"));
 FILES.METABASES = paste(path.expand("~/metabases/"), list.files(path.expand("~/metabases/")), sep="");
 
 # Number of regressors iterations
 EXAMPLES = 5; #2 ou mais
+
+set.seed(1);
+
 
 source("others/multiclass.r");
 source("others/increment.r");
